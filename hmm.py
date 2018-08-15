@@ -14,26 +14,26 @@ class HMM(object):
         self.nt = nt
 
     def train(self, train, file, alpha=0.01):
-        trans = np.zeros((self.nt + 1, self.nt + 1))
-        emit = np.zeros((self.nw, self.nt))
+        A = np.zeros((self.nt + 1, self.nt + 1))
+        B = np.zeros((self.nw, self.nt))
 
         for wiseq, tiseq in train:
             prev = -1
             for wi, ti in zip(wiseq, tiseq):
-                trans[ti, prev] += 1
-                emit[wi, ti] += 1
+                A[ti, prev] += 1
+                B[wi, ti] += 1
                 prev = ti
-            trans[self.nt, prev] += 1
-        trans = self.smooth(trans, alpha)
+            A[self.nt, prev] += 1
+        A = self.smooth(A, alpha)
 
         # 迁移概率
-        self.A = np.log(trans[:-1, :-1])
+        self.trans = np.log(A[:-1, :-1])
         # 句首迁移概率
-        self.SOS = np.log(trans[:-1, -1])
+        self.strans = np.log(A[:-1, -1])
         # 句尾迁移概率
-        self.EOS = np.log(trans[-1, :-1])
+        self.etrans = np.log(A[-1, :-1])
         # 发射概率
-        self.B = np.log(self.smooth(emit, alpha))
+        self.emit = np.log(self.smooth(B, alpha))
 
         # 保存训练好的模型
         if file is not None:
@@ -44,17 +44,17 @@ class HMM(object):
         return (matrix + alpha) / (sums + alpha * len(matrix))
 
     def predict(self, wiseq):
-        T = len(wiseq)
-        delta = np.zeros((T, self.nt))
-        paths = np.zeros((T, self.nt), dtype='int')
+        T, N = len(wiseq), self.nt
+        delta = np.zeros((T, N))
+        paths = np.zeros((T, N), dtype='int')
 
-        delta[0] = self.SOS + self.B[wiseq[0]]
+        delta[0] = self.strans + self.emit[wiseq[0]]
 
         for i in range(1, T):
-            probs = self.A + delta[i - 1]
+            probs = self.trans + delta[i - 1]
             paths[i] = np.argmax(probs, axis=1)
-            delta[i] = probs[np.arange(self.nt), paths[i]] + self.B[wiseq[i]]
-        prev = np.argmax(delta[-1] + self.EOS)
+            delta[i] = probs[np.arange(N), paths[i]] + self.emit[wiseq[i]]
+        prev = np.argmax(delta[-1] + self.etrans)
 
         predict = [prev]
         for i in reversed(range(1, T)):

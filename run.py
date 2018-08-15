@@ -22,7 +22,7 @@ args = parser.parse_args()
 # 根据参数读取配置
 config = Config(args.bigdata)
 
-print("Preprocessing the data")
+print("Preprocess the data")
 corpus = Corpus(config.ftrain)
 train = corpus.load(config.ftrain)
 dev = corpus.load(config.fdev)
@@ -30,13 +30,13 @@ file = args.file if args.file else config.hmmpkl
 
 start = datetime.now()
 
-print("Creating HMM with %d words and %d tags" % (corpus.nw, corpus.nt))
+print("Create HMM with %d words and %d tags" % (corpus.nw, corpus.nt))
 hmm = HMM(corpus.nw, corpus.nt)
 
-print("Using %d sentences to train the HMM" % corpus.ns)
+print("Use %d sentences to train the HMM" % corpus.ns)
 hmm.train(train, file)
 
-print("Using Viterbi algorithm to tag the dataset")
+print("Use Viterbi algorithm to tag the dataset")
 tp, total, precision = hmm.evaluate(dev)
 print("Precision of dev: %d / %d = %4f" % (tp, total, precision))
 
