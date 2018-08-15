@@ -7,16 +7,24 @@ class Corpus(object):
     UNK = '<UNK>'
 
     def __init__(self, fdata):
+        # 获取数据的句子
         self.sentences = self.preprocess(fdata)
-        self.wordseqs, self.tagseqs = zip(*self.sentences)
-        self.words = sorted(set(np.hstack(self.wordseqs)))
-        self.tags = sorted(set(np.hstack(self.tagseqs)))
-        self.words.append(self.UNK)
+        # 获取数据的所有不同的词汇和词性
+        self.words, self.tags = self.parse(self.sentences)
+        # 增加未知词汇
+        self.words += [self.UNK]
 
+        # 词汇字典
         self.wdict = {w: i for i, w in enumerate(self.words)}
+        # 词性字典
         self.tdict = {t: i for i, t in enumerate(self.tags)}
+        # 未知词汇索引
         self.ui = self.wdict[self.UNK]
+        # 句子数量
+        self.ns = len(self.sentences)
+        # 词汇数量
         self.nw = len(self.words)
+        # 词性数量
         self.nt = len(self.tags)
 
     def load(self, fdata):
@@ -24,14 +32,10 @@ class Corpus(object):
         sentences = self.preprocess(fdata)
 
         for wordseq, tagseq in sentences:
-            wiseq = [self.wdict[w] if w in self.wdict else self.ui
-                     for w in wordseq]
+            wiseq = [self.wdict.get(w, self.ui) for w in wordseq]
             tiseq = [self.tdict[t] for t in tagseq]
             data.append((wiseq, tiseq))
         return data
-
-    def size(self):
-        return self.nw - 1, self.nt
 
     @staticmethod
     def preprocess(fdata):
@@ -48,3 +52,10 @@ class Corpus(object):
                     start += 1
                 sentences.append((wordseq, tagseq))
         return sentences
+
+    @staticmethod
+    def parse(sentences):
+        wordseqs, tagseqs = zip(*sentences)
+        words = sorted(set(np.hstack(wordseqs)))
+        tags = sorted(set(np.hstack(tagseqs)))
+        return words, tags

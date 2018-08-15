@@ -33,7 +33,7 @@ start = datetime.now()
 print("Creating HMM with %d words and %d tags" % (corpus.nw, corpus.nt))
 hmm = HMM(corpus.nw, corpus.nt)
 
-print("Using %d sentences to train the HMM" % (len(corpus.sentences)))
+print("Using %d sentences to train the HMM" % corpus.ns)
 hmm.train(train, file)
 
 print("Using Viterbi algorithm to tag the dataset")
