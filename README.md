@@ -31,6 +31,8 @@ optional arguments:
   -h, --help  show this help message and exit
   -b          use big data
   --file FILE, -f FILE  set where to store the model
+# e.g. 
+$ python run.py -b
 ```
 
 ## 结果
