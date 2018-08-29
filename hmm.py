@@ -13,7 +13,7 @@ class HMM(object):
         # 词性数量
         self.nt = nt
 
-    def train(self, train, file, alpha=0.01):
+    def train(self, train, alpha, file):
         A = np.zeros((self.nt + 1, self.nt + 1))
         B = np.zeros((self.nw, self.nt))
 

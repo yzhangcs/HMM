@@ -34,7 +34,7 @@ print("Create HMM with %d words and %d tags" % (corpus.nw, corpus.nt))
 hmm = HMM(corpus.nw, corpus.nt)
 
 print("Use %d sentences to train the HMM" % corpus.ns)
-hmm.train(train, file)
+hmm.train(train, config.alpha, file)
 
 print("Use Viterbi algorithm to tag the dataset")
 tp, total, precision = hmm.evaluate(dev)

@@ -2,8 +2,8 @@ Preprocess the data
 Create HMM with 4538 words and 31 tags
 Use 803 sentences to train the HMM
 Use Viterbi algorithm to tag the dataset
-Precision of dev: 37381 / 50319 = 0.742880
-0:00:00.543569s elapsed
+Precision of dev: 38113 / 50319 = 0.757428
+0:00:00.850447s elapsed
 
 Preprocess the data
 Create HMM with 55954 words and 35 tags
