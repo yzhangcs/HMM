@@ -39,8 +39,8 @@ class Corpus(object):
     def preprocess(fdata):
         start = 0
         sentences = []
-        with open(fdata, 'r') as train:
-            lines = [line for line in train]
+        with open(fdata, 'r') as f:
+            lines = [line for line in f]
         for i, line in enumerate(lines):
             if len(lines[i]) <= 1:
                 splits = [l.split()[1:4:2] for l in lines[start:i]]
