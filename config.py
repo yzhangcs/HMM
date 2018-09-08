@@ -13,4 +13,3 @@ class Config(object):
             self.alpha = 0.3  # 平滑参数
             self.ftrain = 'data/train.conll'
             self.fdev = 'data/dev.conll'
-        self.hmmpkl = 'hmm.pkl'
