@@ -23,13 +23,13 @@
 
 ```sh
 $ python run.py -h
-usage: run.py [-h] [-b]
+usage: run.py [-h] [--bigdata] [--file FILE]
 
-Create Hidden Markov Model(HMM) for POS Tagging
+Create Hidden Markov Model(HMM) for POS Tagging.
 
 optional arguments:
-  -h, --help  show this help message and exit
-  -b          use big data
+  -h, --help            show this help message and exit
+  --bigdata, -b         use big data
   --file FILE, -f FILE  set where to store the model
 # e.g. 
 $ python run.py -b
@@ -45,6 +45,6 @@ $ python run.py -b
 
 ### 大数据集
 
-| alpha | dev/P | test/P | mT(s) |
-| :------: | :-------: | :------: | :------: |
-| 0.01  | 88.3546% | 88.4994%  | 0:00:02.734318 |
+| alpha |  dev/P   |  test/P  |     mT(s)      |
+| :---: | :------: | :------: | :------------: |
+| 0.01  | 88.3546% | 88.4994% | 0:00:02.734318 |
