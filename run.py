@@ -27,26 +27,35 @@ if __name__ == '__main__':
 
     print("Preprocess the data")
     corpus = Corpus(config.ftrain)
-    train = corpus.load(config.ftrain)
-    dev = corpus.load(config.fdev)
-    file = args.file if args.file else config.hmmpkl
+    print(corpus)
+
+    print("Load the dataset")
+    trainset = corpus.load(config.ftrain)
+    devset = corpus.load(config.fdev)
+    print("  size of trainset: %d\n"
+          "  size of devset: %d" %
+          (len(trainset), len(devset)))
+    if args.bigdata:
+        testset = corpus.load(config.ftest)
+        print("  size of testset: %d" % len(testset))
 
     start = datetime.now()
 
-    print("Create HMM with %d words and %d tags" % (corpus.nw, corpus.nt))
+    print("Create HMM")
     hmm = HMM(corpus.nw, corpus.nt)
 
     print("Use %d sentences to train the HMM" % corpus.ns)
-    hmm.train(train, config.alpha, file)
+    hmm.train(trainset=trainset,
+              alpha=config.alpha,
+              file=args.file)
 
     print("Use Viterbi algorithm to tag the dataset")
-    tp, total, precision = hmm.evaluate(dev)
-    print("Precision of dev: %d / %d = %4f" % (tp, total, precision))
+    tp, total, accuracy = hmm.evaluate(devset)
+    print("Accuracy of dev: %d / %d = %4f\n" % (tp, total, accuracy))
 
     if args.bigdata:
-        hmm = HMM.load(file)
-        test = corpus.load(config.ftest)
-        tp, total, precision = hmm.evaluate(test)
-        print("Precision of test: %d / %d = %4f" % (tp, total, precision))
+        hmm = HMM.load(args.file)
+        tp, total, accuracy = hmm.evaluate(testset)
+        print("Accuracy of test: %d / %d = %4f" % (tp, total, accuracy))
 
-    print("%ss elapsed\n" % (datetime.now() - start))
+    print("%ss elapsed" % (datetime.now() - start))

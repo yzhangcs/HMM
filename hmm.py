@@ -13,11 +13,11 @@ class HMM(object):
         # 词性数量
         self.nt = nt
 
-    def train(self, train, alpha, file):
+    def train(self, trainset, alpha, file):
         A = np.zeros((self.nt + 1, self.nt + 1))
         B = np.zeros((self.nw, self.nt))
 
-        for wiseq, tiseq in train:
+        for wiseq, tiseq in trainset:
             prev = -1
             for wi, ti in zip(wiseq, tiseq):
                 A[ti, prev] += 1
@@ -70,8 +70,8 @@ class HMM(object):
             total += len(wiseq)
             predict = np.array(self.predict(wiseq))
             tp += np.sum(tiseq == predict)
-        precision = tp / total
-        return tp, total, precision
+        accuracy = tp / total
+        return tp, total, accuracy
 
     def dump(self, file):
         with open(file, 'wb') as f:
